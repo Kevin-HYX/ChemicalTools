@@ -21,6 +21,10 @@ public class solveSqare {
         }
     }
 
+    public fraction solveMainOneOne(fraction a, fraction b) {
+        return b.divide(a).multiply(fraction.MINUS_ONE);
+    }
+
 
     public double[] solveMainTwoOne(double a1, double b1, double c1, double a2, double b2, double c2) {
         // 二元一次方程组一般式ax+by+c = 0

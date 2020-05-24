@@ -8,9 +8,20 @@ import java.math.MathContext;
  * @author 18145
  * @version 1.0
  */
-public class fraction {
+public class fraction extends Number {
     private BigInteger mother;
     private BigInteger son;
+    public static final fraction MINUS_ONE = new fraction(-1);
+    public static final fraction MINUS_TWO = new fraction(-2);
+    public static final fraction MINUS_THREE = new fraction(-3);
+    public static final fraction MINUS_FIVE = new fraction(-5);
+    public static final fraction MINUS_TEN = new fraction(-10);
+    public static final fraction ONE = new fraction(1);
+    public static final fraction TWO = new fraction(2);
+    public static final fraction THREE = new fraction(3);
+    public static final fraction FIVE = new fraction(5);
+    public static final fraction TEN = new fraction(10);
+
 
     public BigInteger getMother() {
         return mother;
@@ -75,11 +86,8 @@ public class fraction {
      */
     private void stringArrayToFraction(String[] a) {
         son = new BigInteger(a[0] + a[1]);
-        if (a[1].equals("0")) {
-            mother = BigInteger.ONE;
-        } else {
-            mother = BigInteger.TEN.pow(a[1].length());
-        }
+
+        mother = BigInteger.TEN.pow(a[1].length());
     }
 
 
@@ -142,6 +150,7 @@ public class fraction {
 
     /**
      * 返回一个int 数
+     *
      * @return 一个int整数，表示该fraction的整数值
      */
     public int intValue() {
@@ -152,6 +161,7 @@ public class fraction {
 
     /**
      * 返回一个double数
+     *
      * @return 一个double浮点数，表示该fraction的浮点数值
      */
     public double doubleValue() {
@@ -159,26 +169,43 @@ public class fraction {
         BigDecimal bigDecimal1 = new BigDecimal(son);
         return bigDecimal1.divide(bigDecimal, MathContext.DECIMAL128).doubleValue();
     }
+
     /**
      * 返回一个BigDecimal数
+     *
      * @return 一个BigDecimal，表示该fraction的浮点数值
      * @see BigDecimal
      */
+
     public BigDecimal bigDecimalValue() {
         BigDecimal bigDecimal = new BigDecimal(mother);
         BigDecimal bigDecimal1 = new BigDecimal(son);
         return bigDecimal1.divide(bigDecimal, MathContext.DECIMAL128);
     }
 
+    @Override
+    public long longValue() {
+        BigDecimal bigDecimal = new BigDecimal(mother);
+        BigDecimal bigDecimal1 = new BigDecimal(son);
+        return bigDecimal1.divide(bigDecimal, MathContext.DECIMAL128).longValue();
+    }
+
+    @Override
+    public float floatValue() {
+        BigDecimal bigDecimal = new BigDecimal(mother);
+        BigDecimal bigDecimal1 = new BigDecimal(son);
+        return bigDecimal1.divide(bigDecimal, MathContext.DECIMAL128).floatValue();
+    }
+
     /**
      * 返回一个数组
+     *
      * @return 一个BigInteger数组，用于表示
      */
 
-    public BigInteger[] motherAndSon(){
+    public BigInteger[] motherAndSon() {
         return new BigInteger[]{mother, son};
     }
-
 
 
     /**

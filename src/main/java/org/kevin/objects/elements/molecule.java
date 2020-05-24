@@ -10,7 +10,7 @@ import java.util.Set;
  * @version 1.0
  */
 public class molecule {
-    private HashMap<element, Integer> map = new HashMap<>();
+    private final HashMap<element, Integer> map = new HashMap<>();
     private double mess;
     public molecuteToString printer = (map) -> {
         StringBuilder stringBuilder = new StringBuilder();
@@ -25,10 +25,19 @@ public class molecule {
         return stringBuilder.toString();
     };
     public static Scanner scanner = new Scanner(System.in);
+
     public static molecule getAMoleCuteFromScanner() {
-        return getAMoleCuteFromScanner("依次输入一个化学式的元素符号以及元素数量，输入完一个化学式以后以END结尾");
+        return getAMoleCuteFromScanner("依次输入化学式的元素符号以及元素数量，输入完一个化学式以后以END结尾");
     }
 
+    /**
+     * 用指定的提示内容，以控制台交互式获取用户输入，以创建一个molecule
+     *
+     * @param tip 提示的内容，应提示用户end是结束标记
+     * @return 一个molecule，根据用户输入的内容创建
+     * @see molecule
+     * @see String
+     */
     public static molecule getAMoleCuteFromScanner(String tip) {
         System.out.println(tip);
         int i = 1;

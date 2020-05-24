@@ -2,18 +2,13 @@ package org.kevin.tools;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class fractionTest {
 
     @Test
     void multiply() {
-        fraction f1 = new fraction(1.1);
-        fraction f2 = new fraction(1.2);
-        System.out.println(f1.append(f2).doubleValue());
-        System.out.println(f1.multiply(f2).doubleValue());
-        System.out.println(f1.append(f2).doubleValue());
-        System.out.println(f1.subtract(f2).doubleValue());
-
+        fraction fraction = new fraction(80);
+        System.out.println(fraction.append(new fraction(100)).doubleValue());
+        System.out.println(fraction.divide(org.kevin.tools.fraction.TEN).doubleValue());
+        System.out.println(fraction.multiply(new fraction("1.11211312121")).doubleValue());
     }
 }
