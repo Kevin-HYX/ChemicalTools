@@ -6,7 +6,7 @@
 
     <groupId>org.kevin</groupId>
     <artifactId>chemicalTools</artifactId>
-    <version>1.0</version>
+    <version>1.6</version>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -33,7 +33,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>org.kevin.Main.Main2</mainClass>
+                            <mainClass>org.kevin.Main.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,15 +1,12 @@
 package org.kevin.objects.elements;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author 18145
  * @version 1.0
  */
-public class molecule {
+public class molecule implements Iterable<Map.Entry<element, Integer>> {
     private final HashMap<element, Integer> map = new HashMap<>();
     private double mess;
     public molecuteToString printer = (map) -> {
@@ -28,6 +25,11 @@ public class molecule {
 
     public static molecule getAMoleCuteFromScanner() {
         return getAMoleCuteFromScanner("依次输入化学式的元素符号以及元素数量，输入完一个化学式以后以END结尾");
+    }
+
+    @Override
+    public Iterator<Map.Entry<element, Integer>> iterator() {
+        return map.entrySet().iterator();
     }
 
     /**
@@ -101,6 +103,7 @@ public class molecule {
     public void changePrinter(molecuteToString molecuteToString) {
         this.printer = molecuteToString;
     }
+
 
     @Override
     public String toString() {

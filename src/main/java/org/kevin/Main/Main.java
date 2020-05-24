@@ -1,11 +1,14 @@
 package org.kevin.Main;
 
 import org.kevin.objects.elements.chemicalFormula;
+import org.kevin.objects.elements.element;
+import org.kevin.objects.elements.molecule;
 import org.kevin.objects.periodicTableOfTheElements;
 import org.kevin.tools.in;
 import org.kevin.tools.solveSquare;
 
 import java.util.InputMismatchException;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -43,65 +46,35 @@ public class Main {
                         }
                     }
                     break;
-                case 3:
-                    for (int i = 0; i < table.ElementsMassTable.length; i++) {
-                        if (i == 16) {
-                            table.ElementsMassTable[i] = 35.5;
-                        } else {
-                            int temp = (int) table.ElementsMassTable[i];
-                            if (table.ElementsMassTable[i] - temp > 0.5) {
-                                table.ElementsMassTable[i] = temp + 1;
-                            } else {
-                                table.ElementsMassTable[i] = temp;
-                            }
-                        }
-                    }
-                case 2: {
 
-                    System.out.println("输入该化学式由几种原子构成");
-                    int match = inner.oneInt();
-                    if (match == 1) {
-                        System.out.println("该物是由一种元素组成,输入这种元素的元素符号和原子数量");
-                    } else {
-                        System.out.println("该物质是由多种元素组成，分组输入元素符号和原子数量（一一对应）");
-                    }
-                    String[][] dataBase = new String[match][2];
-                    //输入
-                    for (int a = 0; a <= match - 1; a++) {
-                        dataBase[a] = inner.String(2);
-                    }
-                    int[] dataBase2 = new int[match];
-                    for (int a = 0; a <= match - 1; a++) {
-                        dataBase2[a] = Integer.parseInt(dataBase[a][1]);
-                    }
-                    double mass = 0;
-                    int[] dataBase3 = new int[match];
-                    //转换为原子序数
-                    for (int a = 0; a <= match - 1; a++) {
-                        for (int b = 0; b <= 117; b++) {
-                            if (dataBase[a][0].equals(table.ElementsEnglishNameTable[b])) {
-                                dataBase3[a] = b + 1;
-                            }
-                        }
-                    }
-                    /*
-                    database String[][] 用户输入的元素符号和原子数量
-                    database2 int[] 原子数量从String 转为int
-                    database3 int [] 通过查表匹配得到原子序数
-                    */
-                    //求得式量
-                    for (int a = 0; a <= match - 1; a++) {
-                        mass += table.ElementsMassTable[dataBase3[a] - 1] * dataBase2[a];
-                    }
-                    System.out.println("该化学式的式量是 " + mass);
+                case 2: {
+                    molecule m = molecule.getAMoleCuteFromScanner("准备输入该化学式");
+                    System.out.println("该化学式的式量是 " + m.getMess());
                     System.out.println("接下来逐个分析各个元素");
                     System.out.println();
-                    for (int a = 0; a <= match - 1; a++) {
-                        System.out.println("化学元素 " + dataBase[a][0] + " " + table.ElementsChineseNameTable[dataBase3[a] - 1] + " " + dataBase3[a] + " 号元素" + " 相对原子质量 = " + table.ElementsMassTable[dataBase3[a] - 1]);
-                        System.out.println("该元素在该化学式中的质量分数是: " + dataBase2[a] * table.ElementsMassTable[dataBase3[a] - 1] / mass * 100 + "%");
+                    for (Map.Entry<element, Integer> elementIntegerEntry : m) {
+                        System.out.println("化学元素 " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getID() + "号元素 相对原子质量 = " + elementIntegerEntry.getKey().getMess());
+                        System.out.println("该元素在该化学式中的质量分数是: " + elementIntegerEntry.getKey().getMess() * elementIntegerEntry.getValue() / m.getMess());
                         System.out.println();
                     }
                 }
+                case 3: {
+                    molecule m = molecule.getAMoleCuteFromScanner("准备输入该化学式");
+                    System.out.println("该化学式的式量是 " + m.getMessForStudent());
+                    System.out.println("接下来逐个分析各个元素");
+                    System.out.println();
+//                    for (int a = 0; a <= match - 1; a++) {
+//                        System.out.println("化学元素 " + dataBase[a][0] + " " + table.ElementsChineseNameTable[dataBase3[a] - 1] + " " + dataBase3[a] + " 号元素" + " 相对原子质量 = " + table.ElementsMassTable[dataBase3[a] - 1]);
+//                        System.out.println("该元素在该化学式中的质量分数是: " + dataBase2[a] * table.ElementsMassTable[dataBase3[a] - 1] / mass * 100 + "%");
+//                        System.out.println();
+//                    }
+                    for (Map.Entry<element, Integer> elementIntegerEntry : m) {
+                        System.out.println("化学元素 " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getID() + "号元素 相对原子质量 = " + elementIntegerEntry.getKey().getMessForStudent());
+                        System.out.println("该元素在该化学式中的质量分数是: " + elementIntegerEntry.getKey().getMessForStudent() * elementIntegerEntry.getValue() / m.getMessForStudent());
+                        System.out.println();
+                    }
+                }
+
                 break;
                 case 4:
                     chemicalFormula chemicalFormula = org.kevin.objects.elements.chemicalFormula.getchemicalFormulaFromScannerWithDefaultTip();
