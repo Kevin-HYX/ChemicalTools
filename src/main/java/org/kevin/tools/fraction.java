@@ -126,8 +126,8 @@ public class fraction extends Number {
 
     public fraction divide(fraction fraction) {
         BigInteger bigInteger = new BigInteger(mother.toString());
-        mother = son.multiply(fraction.getMother());
-        son = bigInteger.multiply(fraction.getSon());
+        son = son.multiply(fraction.getMother());
+        mother = bigInteger.multiply(fraction.getSon());
         return this;
 
     }

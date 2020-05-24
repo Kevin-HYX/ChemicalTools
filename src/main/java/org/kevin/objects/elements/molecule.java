@@ -74,11 +74,19 @@ public class molecule {
     }
 
     public double getMess() {
-        return map.keySet().stream().mapToDouble(element::getMess).sum();
+        double result = 0;
+        for (Map.Entry<element, Integer> elementIntegerEntry : map.entrySet()) {
+            result += (elementIntegerEntry.getKey().getMess()) * elementIntegerEntry.getValue();
+        }
+        return result;
     }
 
     public double getMessForStudent() {
-        return map.keySet().stream().mapToDouble(element::getMessForStudent).sum();
+        double result = 0;
+        for (Map.Entry<element, Integer> elementIntegerEntry : map.entrySet()) {
+            result += (elementIntegerEntry.getKey().getMessForStudent()) * elementIntegerEntry.getValue();
+        }
+        return result;
     }
 
     public double getElementQualityScore(element element) {

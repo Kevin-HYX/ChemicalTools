@@ -1,6 +1,6 @@
 package org.kevin.tools;
 
-public class solveSqare {
+public class solveSquare {
     /*
     1所有的方程参数均按从左到右逐行输入
     2除一元一次方程，一元二次方程，二元一次，三元一次方程提供基本数据类型double的直接输入方式，该类中都采用double[]的方式输入
@@ -21,7 +21,7 @@ public class solveSqare {
         }
     }
 
-    public fraction solveMainOneOne(fraction a, fraction b) {
+    public static fraction solveMainOneOne(fraction a, fraction b) {
         return b.divide(a).multiply(fraction.MINUS_ONE);
     }
 

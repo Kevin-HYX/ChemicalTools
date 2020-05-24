@@ -1,6 +1,9 @@
 package org.kevin.objects.elements;
 
+import org.kevin.tools.fraction;
+
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -61,15 +64,22 @@ public class chemicalFormula {
                 System.out.println("该化学方程式中，左右两边各有几个化学式？");
                 System.out.print("左边 =>");
                 left = scanner.nextInt();
-                System.out.println("右边 =>");
+                System.out.print("右边 =>");
                 right = scanner.nextInt();
                 if (left <= 0 || right <= 0) {
                     System.out.println("检查你的输入");
                     continue;
                 }
                 break;
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("检查你的输入");
+                /*
+                Scanner出错的时候，会导致错误的消息不被捕获。仍遗留在缓冲区中，这样就会无限的报错
+                加入一个nextLine()以后，就会将错误消息抵消，从而提高程序稳定
+                 */
+                scanner.nextLine();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         ArrayList<molecule> arrayListLeft = new ArrayList<>(left);
@@ -103,9 +113,26 @@ public class chemicalFormula {
         return moleculesRight.size() + moleculesLeft.size();
     }
 
+    public double[] fromAnyMoleculeMessGetAllKindsOfMoleculeMess(int location, double mess) {
+        return fromAnyMoleculeMessGetAllKindsOfMoleculeMess(location, new fraction(mess));
+    }
 
-//    public double[] fromAnyMoleculeMessGetAllKindsOfMoleculeMess(int location, double mess) {
-//
-//    }
-
+    public double[] fromAnyMoleculeMessGetAllKindsOfMoleculeMess(int location, fraction mess) {
+        ArrayList<molecule> moleculeArrayList = new ArrayList<>();
+        moleculeArrayList.addAll(moleculesLeft);
+        moleculeArrayList.addAll(moleculesRight);
+        fraction l = new fraction(moleculeArrayList.get(location - 1).getMessForStudent());
+        double[] result = new double[getAllLength()];
+        for (int i = 0; i < moleculeArrayList.size(); i++) {
+            if (i == location - 1) {
+                result[i] = mess.doubleValue();
+                continue;
+            }
+            fraction f = new fraction(moleculeArrayList.get(i).getMessForStudent());
+            f.multiply(mess);
+            f.divide(l);
+            result[i] = f.doubleValue();
+        }
+        return result;
+    }
 }

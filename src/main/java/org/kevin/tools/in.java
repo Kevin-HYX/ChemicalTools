@@ -1,8 +1,7 @@
 package org.kevin.tools;
 
-import java.sql.Array;
 import java.util.Scanner;
-
+@Deprecated
 public class in {
     Scanner sc = new Scanner(System.in);
 
