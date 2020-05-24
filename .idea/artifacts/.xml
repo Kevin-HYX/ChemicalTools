@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="化学工具">
+    <output-path>$PROJECT_DIR$/../Java成品</output-path>
+    <root id="archive" name="化学工具.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="化学工具" />
+    </root>
+  </artifact>
+</component>
