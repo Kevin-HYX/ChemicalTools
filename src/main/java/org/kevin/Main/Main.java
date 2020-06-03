@@ -76,13 +76,13 @@ public class Main {
                 }
 
                 break;
-                case 4:
+                case 4: {
                     chemicalFormula chemicalFormula = org.kevin.objects.elements.chemicalFormula.getchemicalFormulaFromScannerWithDefaultTip();
                     int location;
                     double mess;
                     while (true) {
                         try {
-                            System.out.println("分别输入这个化学方程式种某一个物质的序号(从左往右1，2，3……)，以及该化学式的质量");
+                            System.out.println("分别输入这个化学方程式中某一个物质的序号(从左往右1，2，3……)，以及该化学式的质量");
                             location = inner.oneInt();
                             mess = inner.oneDouble();
                             break;
@@ -97,6 +97,11 @@ public class Main {
                     for (int i = 0; i < arr.length; i++) {
                         System.out.println("该化学方程式中第" + (i + 1) + "个化学式的质量是" + arr[i]);
                     }
+                }
+                break;
+                case 5: {
+
+                }
                 default: {
                     System.out.println("错误的输入");
                 }
