@@ -3,7 +3,7 @@ package org.kevin.Main;
 import org.kevin.objects.elements.chemicalFormula;
 import org.kevin.objects.elements.element;
 import org.kevin.objects.elements.molecule;
-import org.kevin.objects.periodicTableOfTheElements;
+import org.kevin.objects.tableOfTheElements;
 import org.kevin.tools.in;
 import org.kevin.tools.solveSquare;
 
@@ -15,7 +15,7 @@ public class Main {
         in inner = new in();
         while (true) {
             System.out.println("溶液质量分数计算输入1 化学式分析计算输入2 化学式分析计算(中学版)输入3 化学方程式质量计算输入4");
-            periodicTableOfTheElements table = new periodicTableOfTheElements();
+            tableOfTheElements table = new tableOfTheElements();
             switch (inner.oneInt()) {
                 //溶液
                 case 1:

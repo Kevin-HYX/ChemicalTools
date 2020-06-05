@@ -1,15 +1,18 @@
 package org.kevin.objects.elements;
 
+import java.io.Serializable;
 import java.util.*;
+import java.util.function.BiFunction;
 
 /**
  * @author 18145
  * @version 1.0
  */
-public class molecule implements Iterable<Map.Entry<element, Integer>> {
+public class molecule implements Iterable<Map.Entry<element, Integer>>, Serializable {
     private final HashMap<element, Integer> map = new HashMap<>();
     private double mess;
-    public molecuteToString printer = (map) -> {
+    private static final long serialVersionUID = 1;
+    public moleculeToString printer = (map) -> {
         StringBuilder stringBuilder = new StringBuilder();
         Set<Map.Entry<element, Integer>> set = map.entrySet();
         for (Map.Entry<element, Integer> elementIntegerEntry : set) {
@@ -21,6 +24,11 @@ public class molecule implements Iterable<Map.Entry<element, Integer>> {
         stringBuilder.append("式量(准确值) = ").append(getMess()).append(" 式量(中学生版) = ").append(getMessForStudent());
         return stringBuilder.toString();
     };
+
+    public static long getVersion() {
+        return serialVersionUID;
+    }
+
     public static Scanner scanner = new Scanner(System.in);
 
     public static molecule getAMoleCuteFromScanner() {
@@ -72,7 +80,12 @@ public class molecule implements Iterable<Map.Entry<element, Integer>> {
     }
 
     public void add(element element, int number) {
-        map.merge(element, number, Integer::sum);
+        map.merge(element, number, new BiFunction<Integer, Integer, Integer>() {
+            @Override
+            public Integer apply(Integer integer, Integer integer2) {
+                return integer + integer2;
+            }
+        });
     }
 
     public double getMess() {
@@ -100,8 +113,8 @@ public class molecule implements Iterable<Map.Entry<element, Integer>> {
         }
     }
 
-    public void changePrinter(molecuteToString molecuteToString) {
-        this.printer = molecuteToString;
+    public void changePrinter(moleculeToString moleculeToString) {
+        this.printer = moleculeToString;
     }
 
 

@@ -2,6 +2,7 @@ package org.kevin.objects.elements;
 
 import org.kevin.tools.fraction;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -14,7 +15,9 @@ import java.util.Scanner;
  */
 
 
-public class chemicalFormula {
+public class chemicalFormula implements Serializable {
+    public static final long serialVersionUID = 1;
+
     /**
      * 用于输入化学式的扫描器
      *

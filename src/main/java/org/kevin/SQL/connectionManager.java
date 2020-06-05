@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * @author 18145
  * @version 1.0
  */
-public class CONN {
+public class connectionManager {
     private static Connection connection;
 
     public static Connection getNewConnection(String userName, String passwd) {

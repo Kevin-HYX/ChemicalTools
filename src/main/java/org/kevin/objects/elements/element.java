@@ -1,17 +1,17 @@
 package org.kevin.objects.elements;
 
-import org.kevin.objects.periodicTableOfTheElements;
+import org.kevin.objects.tableOfTheElements;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
 /**
  * @author 18145
  * @version 1.0
  */
-public class element {
+public class element implements Serializable {
     private int ID;
-    private final periodicTableOfTheElements tableOfTheElements = new periodicTableOfTheElements();
-
+    public static final long serialVersionUID = 1;
     public static final int CHINESE_NAME = 0;
     public static final int ENGLISH_NAME = 1;
     public static Scanner scanner = new Scanner(System.in);
@@ -24,6 +24,7 @@ public class element {
         System.out.println(tip);
         return new element(scanner.next(), element.ENGLISH_NAME);
     }
+
     public element(int ID) {
         this.ID = ID;
     }
@@ -37,7 +38,7 @@ public class element {
                         return;
                     }
                 }
-                throw new NullPointerException("找不到指定的元素: "+name);
+                throw new NullPointerException("找不到指定的元素: " + name);
             case ENGLISH_NAME:
                 for (int i = 0; i < tableOfTheElements.ElementsEnglishNameTable.length; i++) {
                     if (name.toLowerCase().equals(tableOfTheElements.ElementsEnglishNameTable[i].toLowerCase())) {
@@ -45,7 +46,7 @@ public class element {
                         return;
                     }
                 }
-                throw new NullPointerException("找不到指定的元素: "+name);
+                throw new NullPointerException("找不到指定的元素: " + name);
         }
     }
 
@@ -63,7 +64,7 @@ public class element {
         }
         int temp = (int) this.getMess();
         if (this.getMess() - temp > 0.5) {
-            return temp +1;
+            return temp + 1;
         } else {
             return temp;
         }
@@ -72,7 +73,6 @@ public class element {
     public String getChineseName() {
         return tableOfTheElements.ElementsChineseNameTable[ID - 1];
     }
-
 
 
     public String getEnglishName() {
@@ -91,12 +91,10 @@ public class element {
 
     @Override
     public int hashCode() {
-        int result = ID;
-        result = 31 * result + (tableOfTheElements != null ? tableOfTheElements.hashCode() : 0);
-        return result;
+        return ID;
     }
 
-    public interface elementToString{
+    public interface elementToString {
         String apply(int ID, String EnglishName, String ChineseName);
     }
 

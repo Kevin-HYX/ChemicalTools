@@ -9,11 +9,11 @@ import java.sql.Statement;
  * @author 18145
  * @version 1.0
  */
-public class addElement {
+public class elementMemory {
     public Statement statement;
 
-    public addElement(String userName, String passwd) {
-        Connection connection = CONN.getConnection(userName, passwd);
+    public elementMemory(String userName, String passwd) {
+        Connection connection = connectionManager.getConnection(userName, passwd);
         try {
             statement = connection.createStatement();
         } catch (SQLException throwables) {
@@ -21,7 +21,7 @@ public class addElement {
         }
     }
 
-    public addElement(Connection connection) {
+    public elementMemory(Connection connection) {
         try {
             statement = connection.createStatement();
         } catch (SQLException throwables) {
