@@ -1,6 +1,6 @@
-package org.kevin.SQL;
+package org.kevin.sql;
 
-import org.kevin.objects.entity.chemicalFormula;
+import org.kevin.objects.entity.ChemicalFormula;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,28 +15,28 @@ import java.sql.SQLException;
  * @author 18145
  * @version 1.0
  */
-public class chemicalFormulaMemory {
+public class ChemicalFormulaMemory {
     public static final byte DO_REWRITE = 0;
     public static final byte DO_NOT_REWRITE = 1;
-    /*
-    向数据库写入文件
+    /**
+     * 向数据库写入文件
      */
     private PreparedStatement writer;
-    /*
-    检查同样的是否存在
+    /**
+     * 检查同样的是否存在
      */
     private PreparedStatement checker;
-    /*
+    /**
     向数据库读取
      */
     private PreparedStatement reader;
-    /*
+    /**
     更改指定项
      */
     private PreparedStatement changer;
 
 
-    public chemicalFormulaMemory(Connection connection) {
+    public ChemicalFormulaMemory(Connection connection) {
         try {
             writer = connection.prepareStatement("INSERT INTO chemicaltool.chemicalformula VALUE (?,?,?,?,?,?);");
             checker = connection.prepareStatement("SELECT ChineseName FROM chemicaltool.chemicalformula c WHERE HashCode = ? AND (ChineseName = ? OR EnglishName = ?);");
@@ -47,11 +47,11 @@ public class chemicalFormulaMemory {
         }
     }
 
-    public chemicalFormulaMemory(String userName, String password) {
+    public ChemicalFormulaMemory(String userName, String password) {
         this(ConnectionManager.getConnection(userName, password));
     }
 
-    public boolean checkSame(chemicalFormula chemicalFormula, String ChineseName, String EnglishName) {
+    public boolean checkSame(ChemicalFormula chemicalFormula, String ChineseName, String EnglishName) {
         ResultSet resultset = null;
         try {
             checker.setLong(1, chemicalFormula.hashCode());
@@ -72,7 +72,7 @@ public class chemicalFormulaMemory {
     /**
      * 往数据库中加入一个化学方程式
      *
-     * @param chemicalFormula 一个<code>chemicalFormula</code>,将被写入数据库
+     * @param chemicalFormula 一个<code>ChemicalFormula</code>,将被写入数据库
      * @param ChineseName     该化学方程式的中文名称
      * @param EnglishName     该化学方程式的英文名称,即化学方程式</br>
      *                        如:2H2O == 2H2 + O2</br>
@@ -81,7 +81,7 @@ public class chemicalFormulaMemory {
      * @param Description     该化学方程式的反应现象,如无,可写无
      * @return 如果写入成功, 则返回true, 发现重复的元素或者其他状况的, 返回false
      */
-    public boolean writeChemicalFormula(chemicalFormula chemicalFormula, String ChineseName, String EnglishName, String Condition, String
+    public boolean writeChemicalFormula(ChemicalFormula chemicalFormula, String ChineseName, String EnglishName, String Condition, String
             Description, byte rewrite) {
 
         byte[] data = new byte[0];

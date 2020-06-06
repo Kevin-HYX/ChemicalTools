@@ -1,6 +1,6 @@
-package org.kevin.SQL;
+package org.kevin.sql;
 
-import org.kevin.objects.entity.molecule;
+import org.kevin.objects.entity.Molecule;
 
 import java.io.*;
 import java.sql.Connection;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * @author 18145
  * @version 1.0
  */
-public class moleculeMemory {
+public class MoleculeMemory {
     public PreparedStatement statement;
     public static final String CHINESE_NAME = "ChineseName";
     public static final String ENGLISH_NAME = "EnglishName";
@@ -23,19 +23,19 @@ public class moleculeMemory {
     private static int lastOperation;
     public Connection connection;
 
-    public moleculeMemory(Connection connection) {
+    public MoleculeMemory(Connection connection) {
         this.connection = connection;
     }
 
-    public moleculeMemory(String userName, String passwd) {
+    public MoleculeMemory(String userName, String passwd) {
         this.connection = ConnectionManager.getConnection(userName, passwd);
     }
 
-    public boolean writeMelecule(molecule m, String ChineseName, String EnglishName) {
+    public boolean writeMelecule(Molecule m, String ChineseName, String EnglishName) {
         return this.writeMelecule(m, ChineseName, EnglishName, DO_NOT_REWRITE);
     }
 
-    public boolean writeMelecule(molecule m, String ChineseName, String EnglishName, byte rewrite) {
+    public boolean writeMelecule(Molecule m, String ChineseName, String EnglishName, byte rewrite) {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream;
@@ -64,7 +64,7 @@ public class moleculeMemory {
             statement.setString(1, ChineseName);
             statement.setString(2, EnglishName);
             statement.setBinaryStream(3, byteArrayInputStream);
-            statement.setLong(4, molecule.getVersion());
+            statement.setLong(4, Molecule.getVersion());
             statement.execute();
         } catch (IOException | SQLException e) {
             e.printStackTrace();
@@ -73,8 +73,8 @@ public class moleculeMemory {
 
     }
 
-    public molecule readByName(String Name, String condition) {
-        molecule molecule;
+    public Molecule readByName(String Name, String condition) {
+        Molecule molecule;
         try {
 
             statement = connection.prepareStatement("select moleculeObjectData from molecule where " + condition + " = ?");
@@ -85,7 +85,7 @@ public class moleculeMemory {
             resultSet.next();
             InputStream stream = resultSet.getBinaryStream(1);
             ObjectInputStream objectInputStream = new ObjectInputStream(stream);
-            molecule = (molecule) objectInputStream.readObject();
+            molecule = (Molecule) objectInputStream.readObject();
             return molecule;
         } catch (Exception throwables) {
             throwables.printStackTrace();

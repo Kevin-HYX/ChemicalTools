@@ -1,6 +1,6 @@
-package org.kevin.objects.Tools;
+package org.kevin.objects.tools;
 
-import org.kevin.objects.entity.element;
+import org.kevin.objects.entity.Element;
 
 import java.util.Scanner;
 
@@ -9,7 +9,6 @@ import java.util.Scanner;
  * @version 1.0
  */
 public class Elements {
-    //    private Statement
     public static Scanner scanner;
 
     public synchronized static boolean init() {
@@ -22,12 +21,12 @@ public class Elements {
         }
     }
 
-    public synchronized static element getAnElementFromScanner() {
+    public synchronized static Element getAnElementFromScanner() {
         return getAnElementFromScanner("输入一个元素的原子符号");
     }
 
-    public synchronized static element getAnElementFromScanner(String tip) {
+    public synchronized static Element getAnElementFromScanner(String tip) {
         System.out.println(tip);
-        return new element(scanner.next(), element.ENGLISH_NAME);
+        return new Element(scanner.next(), Element.ENGLISH_NAME);
     }
 }

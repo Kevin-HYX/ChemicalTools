@@ -13,28 +13,28 @@ import java.util.Scanner;
  */
 
 
-public class chemicalFormula implements Serializable {
+public class ChemicalFormula implements Serializable {
     public static final long serialVersionUID = 1;
-
     /**
      * 用于输入化学式的扫描器
      *
      * @see Scanner
      */
+    @Deprecated
     private static final Scanner scanner = new Scanner(System.in);
     /**
      * 化学方程式的等号的左边
      */
-    private final ArrayList<molecule> moleculesLeft;
+    private final ArrayList<Molecule> moleculesLeft;
     /**
      * 化学方程式的等号右边
      */
-    private final ArrayList<molecule> moleculesRight;
+    private final ArrayList<Molecule> moleculesRight;
 
     /**
      * 一个空的构造器，生产一个空的化学式以便后续往里面添加元素
      */
-    public chemicalFormula() {
+    public ChemicalFormula() {
         this.moleculesLeft = new ArrayList<>();
         this.moleculesRight = new ArrayList<>();
     }
@@ -47,7 +47,7 @@ public class chemicalFormula implements Serializable {
      */
 
 
-    public chemicalFormula(ArrayList<molecule> moleculesLeft, ArrayList<molecule> moleculesRight) {
+    public ChemicalFormula(ArrayList<Molecule> moleculesLeft, ArrayList<Molecule> moleculesRight) {
         this.moleculesLeft = moleculesLeft;
         this.moleculesRight = moleculesRight;
     }
@@ -56,9 +56,10 @@ public class chemicalFormula implements Serializable {
      * 从控制台中，使用默认的提示符以交互式读取一个化学方程式
      *
      * @return 一个化学方程式
-     * @see chemicalFormula
+     * @see ChemicalFormula
      */
-    public static chemicalFormula getchemicalFormulaFromScannerWithDefaultTip() {
+    @Deprecated
+    public static ChemicalFormula getChemicalFormulaFromScannerWithDefaultTip() {
         int left;
         int right;
         while (true) {
@@ -84,53 +85,106 @@ public class chemicalFormula implements Serializable {
                 e.printStackTrace();
             }
         }
-        ArrayList<molecule> arrayListLeft = new ArrayList<>(left);
-        ArrayList<molecule> arrayListRight = new ArrayList<>(right);
+        ArrayList<Molecule> arrayListLeft = new ArrayList<>(left);
+        ArrayList<Molecule> arrayListRight = new ArrayList<>(right);
         for (int i = 1; i <= left; i++) {
-            arrayListLeft.add(molecule.getAMoleCuteFromScanner("准备上输入化学式左边第" + i + "个化学式，输入完一个化学式以后，请以end结尾"));
+            arrayListLeft.add(Molecule.getAMoleCuteFromScanner("准备上输入化学式左边第" + i + "个化学式，输入完一个化学式以后，请以end结尾"));
         }
         for (int i = 1; i <= right; i++) {
-            arrayListRight.add(molecule.getAMoleCuteFromScanner("准备上输入化学式右边第" + i + "个化学式，输入完一个化学式以后，请以end结尾"));
+            arrayListRight.add(Molecule.getAMoleCuteFromScanner("准备上输入化学式右边第" + i + "个化学式，输入完一个化学式以后，请以end结尾"));
         }
-        return new chemicalFormula(arrayListLeft, arrayListRight);
+        return new ChemicalFormula(arrayListLeft, arrayListRight);
     }
 
-    public void addRight(molecule molecule) {
+    /**
+     * 向化学方程式的右边添加化学式
+     *
+     * @param molecule 需要添加的化学式
+     */
+    public void addRight(Molecule molecule) {
         this.moleculesRight.add(molecule);
     }
 
-    public void addLeft(molecule molecule) {
+    /**
+     * 向化学方程式的左边添加化学式
+     *
+     * @param molecule 需要添加的化学式
+     */
+    public void addLeft(Molecule molecule) {
         this.moleculesLeft.add(molecule);
     }
+
+    /**
+     * 同时向化学方程式的两边添加化学式
+     *
+     * @param left  需要添加到左边的化学式
+     * @param right 需要添加到右边的化学式
+     */
+    public void add(Molecule left, Molecule right) {
+        addRight(right);
+        addLeft(left);
+    }
+
+    public ArrayList<Molecule> getMoleculesLeft() {
+        return moleculesLeft;
+    }
+
+    public ArrayList<Molecule> getMoleculesRight() {
+        return moleculesRight;
+    }
+
+    /**
+     * 得到化学方程式左边有几个化学式
+     *
+     * @return 左边的计数值
+     */
 
     public int getLeftLength() {
         return moleculesLeft.size();
     }
 
+    /**
+     * 得到化学方程式右边有几个化学式
+     *
+     * @return 右边的计数值
+     */
     public int getRightLength() {
         return moleculesRight.size();
     }
 
+    /**
+     * 得到化学方程式总共
+     *
+     * @return 总共的计数值
+     */
     public int getAllLength() {
         return moleculesRight.size() + moleculesLeft.size();
     }
 
+    /**
+     * 此方法已经弃用,新的方法位于ChemicalFormula中
+     */
+    @Deprecated
     public double[] fromAnyMoleculeMassGetAllKindsOfMoleculeMass(int location, double mass) {
-        return fromAnyMoleculeMassGetAllKindsOfMoleculeMass(location, new fraction(mass));
+        return fromAnyMoleculeMassGetAllKindsOfMoleculeMass(location, new Fraction(mass));
     }
 
-    public double[] fromAnyMoleculeMassGetAllKindsOfMoleculeMass(int location, fraction mass) {
-        ArrayList<molecule> moleculeArrayList = new ArrayList<>();
+    /**
+     * 此方法已经弃用,新的方法位于ChemicalFormula中
+     */
+    @Deprecated
+    public double[] fromAnyMoleculeMassGetAllKindsOfMoleculeMass(int location, Fraction mass) {
+        ArrayList<Molecule> moleculeArrayList = new ArrayList<>();
         moleculeArrayList.addAll(moleculesLeft);
         moleculeArrayList.addAll(moleculesRight);
-        fraction l = new fraction(moleculeArrayList.get(location - 1).getMassForStudent());
+        Fraction l = new Fraction(moleculeArrayList.get(location - 1).getMassForStudent());
         double[] result = new double[getAllLength()];
         for (int i = 0; i < moleculeArrayList.size(); i++) {
             if (i == location - 1) {
                 result[i] = mass.doubleValue();
                 continue;
             }
-            fraction f = new fraction(moleculeArrayList.get(i).getMassForStudent());
+            Fraction f = new Fraction(moleculeArrayList.get(i).getMassForStudent());
             f.multiply(mass);
             f.divide(l);
             result[i] = f.doubleValue();

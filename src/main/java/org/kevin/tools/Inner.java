@@ -1,8 +1,9 @@
-package org.kevin.Tools;
+package org.kevin.tools;
 
 import java.util.Scanner;
+
 @Deprecated
-public class in {
+public class Inner {
     Scanner sc = new Scanner(System.in);
 
     public int oneInt() {

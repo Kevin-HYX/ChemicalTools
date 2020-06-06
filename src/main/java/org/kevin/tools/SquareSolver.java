@@ -1,8 +1,8 @@
-package org.kevin.Tools;
+package org.kevin.tools;
 
-import org.kevin.objects.entity.fraction;
+import org.kevin.objects.entity.Fraction;
 
-public class solveSquare {
+public class SquareSolver {
     /*
     1所有的方程参数均按从左到右逐行输入
     2除一元一次方程，一元二次方程，二元一次，三元一次方程提供基本数据类型double的直接输入方式，该类中都采用double[]的方式输入
@@ -23,8 +23,8 @@ public class solveSquare {
         }
     }
 
-    public static fraction solveMainOneOne(fraction a, fraction b) {
-        return b.divide(a).multiply(fraction.MINUS_ONE);
+    public static Fraction solveMainOneOne(Fraction a, Fraction b) {
+        return b.divide(a).multiply(Fraction.MINUS_ONE);
     }
 
 

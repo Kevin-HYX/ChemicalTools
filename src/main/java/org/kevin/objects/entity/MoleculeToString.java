@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 @FunctionalInterface
-public interface moleculeToString extends Serializable {
+public interface MoleculeToString extends Serializable {
     long serialVersionUID = 1;
 
-    String toString(Map<element, Integer> map);
+    String toString(Map<Element, Integer> map);
 }

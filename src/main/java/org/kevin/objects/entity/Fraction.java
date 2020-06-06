@@ -8,19 +8,19 @@ import java.math.MathContext;
  * @author 18145
  * @version 1.0
  */
-public class fraction extends Number {
+public class Fraction extends Number {
     private BigInteger mother;
     private BigInteger son;
-    public static final fraction MINUS_ONE = new fraction(-1);
-    public static final fraction MINUS_TWO = new fraction(-2);
-    public static final fraction MINUS_THREE = new fraction(-3);
-    public static final fraction MINUS_FIVE = new fraction(-5);
-    public static final fraction MINUS_TEN = new fraction(-10);
-    public static final fraction ONE = new fraction(1);
-    public static final fraction TWO = new fraction(2);
-    public static final fraction THREE = new fraction(3);
-    public static final fraction FIVE = new fraction(5);
-    public static final fraction TEN = new fraction(10);
+    public static final Fraction MINUS_ONE = new Fraction(-1);
+    public static final Fraction MINUS_TWO = new Fraction(-2);
+    public static final Fraction MINUS_THREE = new Fraction(-3);
+    public static final Fraction MINUS_FIVE = new Fraction(-5);
+    public static final Fraction MINUS_TEN = new Fraction(-10);
+    public static final Fraction ONE = new Fraction(1);
+    public static final Fraction TWO = new Fraction(2);
+    public static final Fraction THREE = new Fraction(3);
+    public static final Fraction FIVE = new Fraction(5);
+    public static final Fraction TEN = new Fraction(10);
 
 
     public BigInteger getMother() {
@@ -47,7 +47,7 @@ public class fraction extends Number {
      * @param b 一个数，用于分子
      */
 
-    public fraction(int a, int b) {
+    public Fraction(int a, int b) {
         mother = new BigInteger(String.valueOf(a));
         son = new BigInteger(String.valueOf(b));
     }
@@ -55,27 +55,27 @@ public class fraction extends Number {
     /**
      * 构造函数，以一个小数来生成fraction
      *
-     * @param V 一个浮点数，用于生成fraction
+     * @param v 一个浮点数，用于生成fraction
      */
-    public fraction(double V) {
-        String[] a = String.valueOf(V).split("\\.");
+    public Fraction(double v) {
+        String[] a = String.valueOf(v).split("\\.");
         stringArrayToFraction(a);
     }
 
     /**
      * 通过一个String来创建fraction
      *
-     * @param V 用于创建fraction的String，必须可以转换为double
+     * @param v 用于创建fraction的String，必须可以转换为double
      * @see String
      */
 
-    public fraction(String V) {
-        String[] a = String.valueOf(Double.parseDouble(V)).split("\\.");
+    public Fraction(String v) {
+        String[] a = String.valueOf(Double.parseDouble(v)).split("\\.");
         stringArrayToFraction(a);
     }
 
-    public fraction(String[] V) {
-        stringArrayToFraction(V);
+    public Fraction(String[] v) {
+        stringArrayToFraction(v);
     }
 
     /**
@@ -97,7 +97,7 @@ public class fraction extends Number {
      * @param fraction 要加的数
      * @return 运算结果
      */
-    public fraction append(fraction fraction) {
+    public Fraction append(Fraction fraction) {
         BigInteger bigInteger = new BigInteger(mother.toString());
         mother = mother.multiply(fraction.getMother());
         son = (son.multiply(fraction.getMother())).add(fraction.getSon().multiply(bigInteger));
@@ -111,7 +111,7 @@ public class fraction extends Number {
      * @return 运算结果
      */
 
-    public fraction multiply(fraction fraction) {
+    public Fraction multiply(Fraction fraction) {
         mother = mother.multiply(fraction.getMother());
         son = son.multiply(fraction.getSon());
         return this;
@@ -124,7 +124,7 @@ public class fraction extends Number {
      * @return 运算结果
      */
 
-    public fraction divide(fraction fraction) {
+    public Fraction divide(Fraction fraction) {
         BigInteger bigInteger = new BigInteger(mother.toString());
         son = son.multiply(fraction.getMother());
         mother = bigInteger.multiply(fraction.getSon());
@@ -139,7 +139,7 @@ public class fraction extends Number {
      * @return 运算结果
      */
 
-    public fraction subtract(fraction fraction) {
+    public Fraction subtract(Fraction fraction) {
         BigInteger bigInteger = new BigInteger(mother.toString());
 
         mother = mother.multiply(fraction.getMother());
@@ -153,6 +153,7 @@ public class fraction extends Number {
      *
      * @return 一个int整数，表示该fraction的整数值
      */
+    @Override
     public int intValue() {
         BigDecimal bigDecimal = new BigDecimal(mother);
         BigDecimal bigDecimal1 = new BigDecimal(son);
@@ -164,6 +165,7 @@ public class fraction extends Number {
      *
      * @return 一个double浮点数，表示该fraction的浮点数值
      */
+    @Override
     public double doubleValue() {
         BigDecimal bigDecimal = new BigDecimal(mother);
         BigDecimal bigDecimal1 = new BigDecimal(son);
@@ -198,9 +200,9 @@ public class fraction extends Number {
     }
 
     /**
-     * 返回一个数组
+     * 返回一个数组,第一个元素为分子,第二个元素为分母
      *
-     * @return 一个BigInteger数组，用于表示
+     * @return 一个BigInteger数组，用于表示分子分母
      */
 
     public BigInteger[] motherAndSon() {

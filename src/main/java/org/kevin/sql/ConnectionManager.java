@@ -1,4 +1,4 @@
-package org.kevin.SQL;
+package org.kevin.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

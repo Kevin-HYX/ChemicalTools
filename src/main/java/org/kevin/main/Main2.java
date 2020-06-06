@@ -1,6 +1,6 @@
 package org.kevin.main;
 
-import org.kevin.objects.entity.chemicalFormula;
+import org.kevin.objects.entity.ChemicalFormula;
 
 /**
  * @author 18145
@@ -8,7 +8,7 @@ import org.kevin.objects.entity.chemicalFormula;
  */
 public class Main2 {
     public static void main(String[] args) {
-        chemicalFormula chemicalFormula = org.kevin.objects.entity.chemicalFormula.getchemicalFormulaFromScannerWithDefaultTip();
+        ChemicalFormula chemicalFormula = ChemicalFormula.getChemicalFormulaFromScannerWithDefaultTip();
         double[] arr = chemicalFormula.fromAnyMoleculeMassGetAllKindsOfMoleculeMass(1, 18);
         for (double v : arr) {
             System.out.println(v);
