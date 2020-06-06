@@ -1,6 +1,4 @@
-package org.kevin.objects.elements;
-
-import org.kevin.tools.fraction;
+package org.kevin.objects.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,17 +25,18 @@ public class chemicalFormula implements Serializable {
     /**
      * 化学方程式的等号的左边
      */
-    private ArrayList<molecule> moleculesLeft;
+    private final ArrayList<molecule> moleculesLeft;
     /**
      * 化学方程式的等号右边
      */
-    private ArrayList<molecule> moleculesRight;
+    private final ArrayList<molecule> moleculesRight;
 
     /**
      * 一个空的构造器，生产一个空的化学式以便后续往里面添加元素
      */
     public chemicalFormula() {
-
+        this.moleculesLeft = new ArrayList<>();
+        this.moleculesRight = new ArrayList<>();
     }
 
     /**
@@ -116,23 +115,23 @@ public class chemicalFormula implements Serializable {
         return moleculesRight.size() + moleculesLeft.size();
     }
 
-    public double[] fromAnyMoleculeMessGetAllKindsOfMoleculeMess(int location, double mess) {
-        return fromAnyMoleculeMessGetAllKindsOfMoleculeMess(location, new fraction(mess));
+    public double[] fromAnyMoleculeMassGetAllKindsOfMoleculeMass(int location, double mass) {
+        return fromAnyMoleculeMassGetAllKindsOfMoleculeMass(location, new fraction(mass));
     }
 
-    public double[] fromAnyMoleculeMessGetAllKindsOfMoleculeMess(int location, fraction mess) {
+    public double[] fromAnyMoleculeMassGetAllKindsOfMoleculeMass(int location, fraction mass) {
         ArrayList<molecule> moleculeArrayList = new ArrayList<>();
         moleculeArrayList.addAll(moleculesLeft);
         moleculeArrayList.addAll(moleculesRight);
-        fraction l = new fraction(moleculeArrayList.get(location - 1).getMessForStudent());
+        fraction l = new fraction(moleculeArrayList.get(location - 1).getMassForStudent());
         double[] result = new double[getAllLength()];
         for (int i = 0; i < moleculeArrayList.size(); i++) {
             if (i == location - 1) {
-                result[i] = mess.doubleValue();
+                result[i] = mass.doubleValue();
                 continue;
             }
-            fraction f = new fraction(moleculeArrayList.get(i).getMessForStudent());
-            f.multiply(mess);
+            fraction f = new fraction(moleculeArrayList.get(i).getMassForStudent());
+            f.multiply(mass);
             f.divide(l);
             result[i] = f.doubleValue();
         }

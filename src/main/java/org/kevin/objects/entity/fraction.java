@@ -1,4 +1,4 @@
-package org.kevin.tools;
+package org.kevin.objects.entity;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

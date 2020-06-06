@@ -1,4 +1,6 @@
-package org.kevin.tools;
+package org.kevin.Tools;
+
+import org.kevin.objects.entity.fraction;
 
 public class solveSquare {
     /*

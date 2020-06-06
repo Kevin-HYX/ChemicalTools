@@ -1,4 +1,4 @@
-package org.kevin.objects.elements;
+package org.kevin.objects.entity;
 
 import java.io.Serializable;
 import java.util.*;
@@ -10,8 +10,6 @@ import java.util.function.BiFunction;
  */
 public class molecule implements Iterable<Map.Entry<element, Integer>>, Serializable {
     private final HashMap<element, Integer> map = new HashMap<>();
-    private double mess;
-    private static final long serialVersionUID = 1;
     public moleculeToString printer = (map) -> {
         StringBuilder stringBuilder = new StringBuilder();
         Set<Map.Entry<element, Integer>> set = map.entrySet();
@@ -21,9 +19,11 @@ public class molecule implements Iterable<Map.Entry<element, Integer>>, Serializ
         if (map.isEmpty()) {
             stringBuilder.append("空化学式 ");
         }
-        stringBuilder.append("式量(准确值) = ").append(getMess()).append(" 式量(中学生版) = ").append(getMessForStudent());
+        stringBuilder.append("式量(准确值) = ").append(getMass()).append(" 式量(中学生版) = ").append(getMassForStudent());
         return stringBuilder.toString();
     };
+    private static final long serialVersionUID = 1;
+    private double mass;
 
     public static long getVersion() {
         return serialVersionUID;
@@ -59,7 +59,7 @@ public class molecule implements Iterable<Map.Entry<element, Integer>>, Serializ
                 if (ele.toLowerCase().equals("end")) {
                     break;
                 }
-                final element element = new element(ele, org.kevin.objects.elements.element.ENGLISH_NAME);
+                final element element = new element(ele, org.kevin.objects.entity.element.ENGLISH_NAME);
                 System.out.print("输入第" + i + "种元素的元素数量 =>");
                 result.add(element, scanner.nextInt());
                 i++;
@@ -72,6 +72,23 @@ public class molecule implements Iterable<Map.Entry<element, Integer>>, Serializ
         }
         //没有任何的输入
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        molecule molecule = (molecule) o;
+
+        if (Double.compare(molecule.mass, mass) != 0) return false;
+        return map != null ? map.equals(molecule.map) : molecule.map == null;
+    }
+
+    @Override
+    public int hashCode() {
+        long temp = Double.doubleToLongBits(mass);
+        return (int) (temp ^ (temp >>> 32));
     }
 
 
@@ -88,18 +105,18 @@ public class molecule implements Iterable<Map.Entry<element, Integer>>, Serializ
         });
     }
 
-    public double getMess() {
+    public double getMass() {
         double result = 0;
         for (Map.Entry<element, Integer> elementIntegerEntry : map.entrySet()) {
-            result += (elementIntegerEntry.getKey().getMess()) * elementIntegerEntry.getValue();
+            result += (elementIntegerEntry.getKey().getMass()) * elementIntegerEntry.getValue();
         }
         return result;
     }
 
-    public double getMessForStudent() {
+    public double getMassForStudent() {
         double result = 0;
         for (Map.Entry<element, Integer> elementIntegerEntry : map.entrySet()) {
-            result += (elementIntegerEntry.getKey().getMessForStudent()) * elementIntegerEntry.getValue();
+            result += (elementIntegerEntry.getKey().getMassForStudent()) * elementIntegerEntry.getValue();
         }
         return result;
     }

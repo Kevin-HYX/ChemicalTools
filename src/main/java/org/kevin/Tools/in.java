@@ -1,4 +1,4 @@
-package org.kevin.tools;
+package org.kevin.Tools;
 
 import java.util.Scanner;
 @Deprecated

@@ -1,6 +1,6 @@
 package org.kevin.SQL;
 
-import org.kevin.objects.elements.molecule;
+import org.kevin.objects.entity.molecule;
 
 import java.io.*;
 import java.sql.Connection;
@@ -28,14 +28,14 @@ public class moleculeMemory {
     }
 
     public moleculeMemory(String userName, String passwd) {
-        this.connection = connectionManager.getConnection(userName, passwd);
+        this.connection = ConnectionManager.getConnection(userName, passwd);
     }
 
-    public boolean add(molecule m, String ChineseName, String EnglishName) {
-        return this.add(m, ChineseName, EnglishName, DO_NOT_REWRITE);
+    public boolean writeMelecule(molecule m, String ChineseName, String EnglishName) {
+        return this.writeMelecule(m, ChineseName, EnglishName, DO_NOT_REWRITE);
     }
 
-    public boolean add(molecule m, String ChineseName, String EnglishName, byte rewrite) {
+    public boolean writeMelecule(molecule m, String ChineseName, String EnglishName, byte rewrite) {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream;
@@ -74,7 +74,7 @@ public class moleculeMemory {
     }
 
     public molecule readByName(String Name, String condition) {
-        molecule molecule = null;
+        molecule molecule;
         try {
 
             statement = connection.prepareStatement("select moleculeObjectData from molecule where " + condition + " = ?");
@@ -90,6 +90,6 @@ public class moleculeMemory {
         } catch (Exception throwables) {
             throwables.printStackTrace();
         }
-        return molecule;
+        return null;
     }
 }

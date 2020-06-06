@@ -2,41 +2,32 @@ package org.kevin.SQL;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * @author 18145
  * @version 1.0
  */
 public class elementMemory {
-    public Statement statement;
+    // TODO: 2020/6/5 使用preparedStatement
+    public PreparedStatement statement;
 
     public elementMemory(String userName, String passwd) {
-        Connection connection = connectionManager.getConnection(userName, passwd);
-        try {
-            statement = connection.createStatement();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        this(ConnectionManager.getConnection(userName, passwd));
     }
 
     public elementMemory(Connection connection) {
         try {
-            statement = connection.createStatement();
+            statement = connection.prepareStatement("INSERT INTO chemicaltool.elements VALUE (?,?,?,?,?,?);");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
 
-    public void add(int id, double mess, String ChineseName, String EnglishName) {
-        try {
-            System.out.println("insert into elements values (" + id + "," + mess + ",'" + ChineseName + "',''" + EnglishName + "')");
-            statement.execute("insert into elements values (" + id + "," + mess + ",'" + ChineseName + "','" + EnglishName + "')");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    public void writeElement(int id, double mass, double massForStudents, String ChineseName, String EnglishName, String Description) {
+        public void
     }
 
 

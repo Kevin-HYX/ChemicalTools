@@ -1,9 +1,6 @@
-package org.kevin.objects.elements;
-
-import org.kevin.objects.tableOfTheElements;
+package org.kevin.objects.entity;
 
 import java.io.Serializable;
-import java.util.Scanner;
 
 /**
  * @author 18145
@@ -14,16 +11,7 @@ public class element implements Serializable {
     public static final long serialVersionUID = 1;
     public static final int CHINESE_NAME = 0;
     public static final int ENGLISH_NAME = 1;
-    public static Scanner scanner = new Scanner(System.in);
 
-    public static element getAnElementFromScanner() {
-        return getAnElementFromScanner("输入一个元素的原子符号");
-    }
-
-    public static element getAnElementFromScanner(String tip) {
-        System.out.println(tip);
-        return new element(scanner.next(), element.ENGLISH_NAME);
-    }
 
     public element(int ID) {
         this.ID = ID;
@@ -54,16 +42,16 @@ public class element implements Serializable {
         return ID;
     }
 
-    public double getMess() {
+    public double getMass() {
         return tableOfTheElements.ElementsMassTable[ID - 1];
     }
 
-    public double getMessForStudent() {
+    public double getMassForStudent() {
         if (this.ID == 17) {
             return 35.5;
         }
-        int temp = (int) this.getMess();
-        if (this.getMess() - temp > 0.5) {
+        int temp = (int) this.getMass();
+        if (this.getMass() - temp > 0.5) {
             return temp + 1;
         } else {
             return temp;

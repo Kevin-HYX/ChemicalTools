@@ -1,4 +1,4 @@
-package org.kevin.objects.elements;
+package org.kevin.objects.entity;
 
 import java.io.Serializable;
 import java.util.Map;

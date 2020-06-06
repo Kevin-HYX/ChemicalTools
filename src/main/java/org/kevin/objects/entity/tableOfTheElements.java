@@ -1,4 +1,4 @@
-package org.kevin.objects;
+package org.kevin.objects.entity;
 
 import java.io.Serializable;
 

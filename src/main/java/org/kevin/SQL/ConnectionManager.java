@@ -8,7 +8,10 @@ import java.sql.SQLException;
  * @author 18145
  * @version 1.0
  */
-public class connectionManager {
+public class ConnectionManager {
+    /**
+     * 一个<code>Connection</code>,充当缓冲池
+     */
     private static Connection connection;
 
     /**
@@ -101,5 +104,6 @@ public class connectionManager {
         }
         return connection;
     }
+
 }
 

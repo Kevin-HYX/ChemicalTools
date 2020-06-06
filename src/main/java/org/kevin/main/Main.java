@@ -1,11 +1,11 @@
-package org.kevin.Main;
+package org.kevin.main;
 
-import org.kevin.objects.elements.chemicalFormula;
-import org.kevin.objects.elements.element;
-import org.kevin.objects.elements.molecule;
-import org.kevin.objects.tableOfTheElements;
-import org.kevin.tools.in;
-import org.kevin.tools.solveSquare;
+import org.kevin.Tools.in;
+import org.kevin.Tools.solveSquare;
+import org.kevin.objects.entity.chemicalFormula;
+import org.kevin.objects.entity.element;
+import org.kevin.objects.entity.molecule;
+import org.kevin.objects.entity.tableOfTheElements;
 
 import java.util.InputMismatchException;
 import java.util.Map;
@@ -49,18 +49,18 @@ public class Main {
 
                 case 2: {
                     molecule m = molecule.getAMoleCuteFromScanner("准备输入该化学式");
-                    System.out.println("该化学式的式量是 " + m.getMess());
+                    System.out.println("该化学式的式量是 " + m.getMass());
                     System.out.println("接下来逐个分析各个元素");
                     System.out.println();
                     for (Map.Entry<element, Integer> elementIntegerEntry : m) {
-                        System.out.println("化学元素 " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getID() + "号元素 相对原子质量 = " + elementIntegerEntry.getKey().getMess());
-                        System.out.println("该元素在该化学式中的质量分数是: " + elementIntegerEntry.getKey().getMess() * elementIntegerEntry.getValue() / m.getMess());
+                        System.out.println("化学元素 " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getID() + "号元素 相对原子质量 = " + elementIntegerEntry.getKey().getMass());
+                        System.out.println("该元素在该化学式中的质量分数是: " + elementIntegerEntry.getKey().getMass() * elementIntegerEntry.getValue() / m.getMass());
                         System.out.println();
                     }
                 }
                 case 3: {
                     molecule m = molecule.getAMoleCuteFromScanner("准备输入该化学式");
-                    System.out.println("该化学式的式量是 " + m.getMessForStudent());
+                    System.out.println("该化学式的式量是 " + m.getMassForStudent());
                     System.out.println("接下来逐个分析各个元素");
                     System.out.println();
 //                    for (int a = 0; a <= match - 1; a++) {
@@ -69,15 +69,15 @@ public class Main {
 //                        System.out.println();
 //                    }
                     for (Map.Entry<element, Integer> elementIntegerEntry : m) {
-                        System.out.println("化学元素 " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getID() + "号元素 相对原子质量 = " + elementIntegerEntry.getKey().getMessForStudent());
-                        System.out.println("该元素在该化学式中的质量分数是: " + elementIntegerEntry.getKey().getMessForStudent() * elementIntegerEntry.getValue() / m.getMessForStudent());
+                        System.out.println("化学元素 " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getEnglishName() + " " + elementIntegerEntry.getKey().getID() + "号元素 相对原子质量 = " + elementIntegerEntry.getKey().getMassForStudent());
+                        System.out.println("该元素在该化学式中的质量分数是: " + elementIntegerEntry.getKey().getMassForStudent() * elementIntegerEntry.getValue() / m.getMassForStudent());
                         System.out.println();
                     }
                 }
 
                 break;
                 case 4: {
-                    chemicalFormula chemicalFormula = org.kevin.objects.elements.chemicalFormula.getchemicalFormulaFromScannerWithDefaultTip();
+                    chemicalFormula chemicalFormula = org.kevin.objects.entity.chemicalFormula.getchemicalFormulaFromScannerWithDefaultTip();
                     int location;
                     double mess;
                     while (true) {
@@ -92,7 +92,7 @@ public class Main {
                             e.printStackTrace();
                         }
                     }
-                    double[] arr = chemicalFormula.fromAnyMoleculeMessGetAllKindsOfMoleculeMess(location, mess);
+                    double[] arr = chemicalFormula.fromAnyMoleculeMassGetAllKindsOfMoleculeMass(location, mess);
 
                     for (int i = 0; i < arr.length; i++) {
                         System.out.println("该化学方程式中第" + (i + 1) + "个化学式的质量是" + arr[i]);
