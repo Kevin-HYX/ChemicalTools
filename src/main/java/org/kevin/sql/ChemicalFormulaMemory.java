@@ -39,9 +39,9 @@ public class ChemicalFormulaMemory {
     public ChemicalFormulaMemory(Connection connection) {
         try {
             writer = connection.prepareStatement("INSERT INTO chemicaltool.chemicalformula VALUE (?,?,?,?,?,?);");
-            checker = connection.prepareStatement("SELECT ChineseName FROM chemicaltool.chemicalformula c WHERE HashCode = ? AND (ChineseName = ? OR EnglishName = ?);");
-            reader = connection.prepareStatement("SELECT chemicalFormulaObjectsData FROM chemicaltool.chemicalformula c WHERE HashCode = ? AND EnglishName = ? AND ChineseName = ?;");
-            changer = connection.prepareStatement("UPDATE chemicaltool.chemicalformula SET `Condition` = ?,Description = ?,chemicalFormulaObjectsData = ?,HashCode = ? WHERE ChineseName = ? AND EnglishName = ?;");
+            checker = connection.prepareStatement("SELECT ChineseName FROM chemicaltool.chemicalformula c WHERE ChineseName = ? OR EnglishName = ?;");
+            reader = connection.prepareStatement("SELECT chemicalFormulaObjectsData FROM chemicaltool.chemicalformula c WHERE EnglishName = ?;");
+            changer = connection.prepareStatement("UPDATE chemicaltool.chemicalformula SET `Condition` = ?,Description = ?,chemicalFormulaObjectsData = ? WHERE EnglishName = ?;");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

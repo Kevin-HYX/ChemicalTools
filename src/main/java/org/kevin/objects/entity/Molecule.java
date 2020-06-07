@@ -32,6 +32,10 @@ public class Molecule implements Iterable<Map.Entry<Element, Integer>>, Serializ
         return stringBuilder.toString();
     };
 
+    public long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
     public Molecule() {
 
     }

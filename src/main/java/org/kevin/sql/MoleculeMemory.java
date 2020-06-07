@@ -3,93 +3,201 @@ package org.kevin.sql;
 import org.kevin.objects.entity.Molecule;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * @author 18145
  * @version 1.0
  */
 public class MoleculeMemory {
-    public PreparedStatement statement;
-    public static final String CHINESE_NAME = "ChineseName";
-    public static final String ENGLISH_NAME = "EnglishName";
+    public static final byte CHINESE_NAME = 0;
+    public static final byte ENGLISH_NAME = 1;
+    public static final String LOCATION_CHINESE_NAME = "1";
+    public static final String LOCATION_ENGLISH_NAME = "2";
+    public static final Molecule LOCATION_OBJECT_DATA = new Molecule();
+    public static final Integer LOCATION_DATA_VERSION = 4;
+    public static final String LOCATION_DESCRIPTION = "5";
+    public Statement statement;
+    public PreparedStatement writer;
     public static final byte DO_REWRITE = 0;
     public static final byte DO_NOT_REWRITE = 1;
-    private static final byte WEITE = 1;
-    private static final byte READ = 2;
-    private static int lastOperation;
-    public Connection connection;
+    public PreparedStatement updater;
+    public PreparedStatement readerFromChineseName;
+    public PreparedStatement readerFromEnglishName;
+    public PreparedStatement checker1;
+    public PreparedStatement checker2;
 
-    public MoleculeMemory(Connection connection) {
-        this.connection = connection;
+
+    public MoleculeMemory(Connection connection) throws SQLException {
+        statement = connection.createStatement();
+        writer = connection.prepareStatement("INSERT INTO chemicaltool.molecule(ChineseName, EnglishName, moleculeObjectData, dataVersion, Description) VALUE (?,?,?,?,?);");
+        checker1 = connection.prepareStatement("SELECT ChineseName FROM chemicaltool.molecule m WHERE EnglishName = ? LIMIT 1;");
+        checker2 = connection.prepareStatement("SELECT ChineseName FROM chemicaltool.molecule m WHERE ChineseName = ? LIMIT 1;");
+        readerFromChineseName = connection.prepareStatement("SELECT * FROM chemicaltool.molecule m WHERE ChineseName = ?;");
+        readerFromEnglishName = connection.prepareStatement("SELECT * FROM chemicaltool.molecule m WHERE EnglishName = ?;");
+        updater = connection.prepareStatement("UPDATE chemicaltool.molecule SET moleculeObjectData = ?,dataVersion = ?,Description = ? WHERE EnglishName = ?;");
+
+
     }
 
-    public MoleculeMemory(String userName, String passwd) {
-        this.connection = ConnectionManager.getConnection(userName, passwd);
+    public MoleculeMemory(String userName, String passwd) throws SQLException {
+        this(ConnectionManager.getConnection(userName, passwd));
     }
 
-    public boolean writeMelecule(Molecule m, String ChineseName, String EnglishName) {
-        return this.writeMelecule(m, ChineseName, EnglishName, DO_NOT_REWRITE);
+    public boolean checkAvailable(String ChineseName, String EnglishName) throws SQLException {
+        long time = System.nanoTime();
+
+        checker1.setString(1, EnglishName);
+        checker2.setString(1, ChineseName);
+        ResultSet resultSet = checker1.executeQuery();
+        if (resultSet.next()) {
+            return true;
+        } else {
+            ResultSet resultSet1 = checker2.executeQuery();
+            return resultSet1.next();
+        }
+
     }
 
-    public boolean writeMelecule(Molecule m, String ChineseName, String EnglishName, byte rewrite) {
+    public boolean writeMolecule(Molecule m, String ChineseName, String EnglishName, String Description) throws IOException, SQLException {
+        return this.writeMolecule(m, ChineseName, EnglishName, Description, DO_REWRITE);
+    }
+
+    private String checkDescription(String Description) {
+        if (Description == null) {
+            Description = "无";
+        }
+        return Description;
+    }
+
+    public void executeBatch() throws SQLException {
+        writer.executeBatch();
+        updater.executeBatch();
+    }
+
+    // TODO: 2020/6/6 错误:检查相同元素
+    public boolean writeMolecule(Molecule m, String ChineseName, String EnglishName, String Description, byte rewrite) throws SQLException, IOException {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream;
-        try {
-            //性能改进
-            if (lastOperation != WEITE) {
-                statement = connection.prepareStatement("insert into molecule " +
-                        "values (" +
-                        "?," +
-                        "?," +
-                        "?," +
-                        "?" +
-                        ");");
-                statement.execute("use chemicaltool");
-                lastOperation = WEITE;
-            }
-            // TODO: 2020/6/4 版本检查代码加入
-            statement.execute("use chemicaltool");
-            ResultSet resultSet = statement.executeQuery("select ChineseName from molecule WHERE ChineseName = '" + ChineseName + "'AND EnglishName = '" + EnglishName + "';");
-            if (resultSet.next() && rewrite == DO_NOT_REWRITE) {
+        // TODO: 2020/6/4 版本检查代码加入
+        long time = System.nanoTime();
+        if (checkAvailable(ChineseName, EnglishName)) {
+            if (rewrite == DO_REWRITE) {
+                updateMolecule(ChineseName, EnglishName, m, Description);
+
+                return true;
+            } else {
+
                 return false;
             }
-            objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(m);
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-            statement.setString(1, ChineseName);
-            statement.setString(2, EnglishName);
-            statement.setBinaryStream(3, byteArrayInputStream);
-            statement.setLong(4, Molecule.getVersion());
-            statement.execute();
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
         }
+        objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(m);
+        objectOutputStream.close();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        writer.setString(1, ChineseName);
+        writer.setString(2, EnglishName);
+        writer.setBinaryStream(3, byteArrayInputStream);
+        writer.setLong(4, Molecule.getVersion());
+        Description = checkDescription(Description);
+        writer.setString(5, Description);
+        writer.executeUpdate();
+
         return true;
 
     }
 
-    public Molecule readByName(String Name, String condition) {
-        Molecule molecule;
-        try {
-
-            statement = connection.prepareStatement("select moleculeObjectData from molecule where " + condition + " = ?");
-            statement.execute("use chemicaltool");
-            statement.setString(1, Name);
-
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            InputStream stream = resultSet.getBinaryStream(1);
-            ObjectInputStream objectInputStream = new ObjectInputStream(stream);
-            molecule = (Molecule) objectInputStream.readObject();
-            return molecule;
-        } catch (Exception throwables) {
-            throwables.printStackTrace();
+    public boolean updateMolecule(String ChineseName, String EnglishName, Molecule molecule, String Description) throws SQLException, IOException {
+        if (checkAvailable(ChineseName, EnglishName)) {
+            return false;
+        } else {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(molecule);
+            objectOutputStream.close();
+            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+            updater.setBinaryStream(1, byteArrayInputStream);
+            updater.setLong(2, molecule.getSerialVersionUID());
+            Description = checkDescription(Description);
+            updater.setString(3, Description);
+            updater.setString(4, EnglishName);
+            updater.executeUpdate();
         }
-        return null;
+        return true;
     }
+
+    public ResultSet readByName(String Name, byte condition) throws SQLException, IOException, ClassNotFoundException {
+
+        ResultSet resultSet;
+        if (condition == CHINESE_NAME) {
+
+            readerFromChineseName.setString(1, Name);
+            resultSet = readerFromChineseName.executeQuery();
+        } else if (condition == ENGLISH_NAME) {
+
+            readerFromEnglishName.setString(1, Name);
+            resultSet = readerFromEnglishName.executeQuery();
+        } else {
+            throw new UnsupportedOperationException("不支持此操作:" + condition);
+        }
+
+        return resultSet;
+
+    }
+
+    public <V> V readByName(String Name, byte condition, V location) throws SQLException, IOException, ClassNotFoundException {
+        ResultSet resultSet = readByName(Name, condition);
+        resultSet.next();
+        if (location instanceof Integer) {
+            Integer integer = resultSet.getInt((Integer) location);
+            return (V) integer;
+        } else if (location instanceof String) {
+            int Location = Integer.parseInt((String) location);
+            String string = resultSet.getString(Location);
+            return (V) string;
+        } else if (location instanceof Molecule) {
+            InputStream stream = resultSet.getBinaryStream(3);
+            ObjectInputStream objectInputStream = new ObjectInputStream(stream);
+            return (V) objectInputStream.readObject();
+        } else {
+            throw new UnsupportedOperationException("不支持该操作");
+        }
+
+    }
+
+    public String readChineseNameByEnglishName(String EnglishName) throws SQLException, IOException, ClassNotFoundException {
+        ResultSet resultSet = readByName(EnglishName, CHINESE_NAME);
+        resultSet.next();
+        return resultSet.getString(1);
+    }
+
+    public String readEnglishNameByChineseName(String ChineseName) throws SQLException, IOException, ClassNotFoundException {
+        ResultSet resultSet = readByName(ChineseName, CHINESE_NAME);
+        resultSet.next();
+        return resultSet.getString(2);
+    }
+
+    public Molecule readMoleculeObjectByName(String name, byte condition) throws SQLException, IOException, ClassNotFoundException {
+
+        ResultSet resultSet = readByName(name, condition);
+        resultSet.next();
+        InputStream stream = resultSet.getBinaryStream(3);
+        ObjectInputStream objectInputStream = new ObjectInputStream(stream);
+        return (Molecule) objectInputStream.readObject();
+    }
+
+    public String readDataVersion(String name, byte condition) throws SQLException, IOException, ClassNotFoundException {
+        ResultSet resultSet = readByName(name, condition);
+        resultSet.next();
+        return resultSet.getString(4);
+    }
+
+    public String readDescription(String name, byte condition) throws SQLException, IOException, ClassNotFoundException {
+        ResultSet resultSet = readByName(name, condition);
+        resultSet.next();
+        return resultSet.getString(5);
+    }
+
+
 }

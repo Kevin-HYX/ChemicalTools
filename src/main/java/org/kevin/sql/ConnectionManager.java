@@ -82,7 +82,7 @@ public class ConnectionManager {
      * @see Connection
      */
     public static Connection getConnection(String userName, String passwd) {
-        return getConnection("jdbc:mysql://192.168.1.103:3306/chemicaltool ? serverTimezone = UTC", userName, passwd);
+        return getConnection("jdbc:mysql://192.168.1.103:3306/chemicaltool ? serverTimezone = UTC & rewriteBatchedStatements = true", userName, passwd);
     }
 
     /**
