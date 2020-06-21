@@ -10,6 +10,7 @@ import java.sql.*;
  * @version 1.0
  */
 public class MoleculeMemory {
+    //<------------------------faction------------------------------->
     public static final byte CHINESE_NAME = 0;
     public static final byte ENGLISH_NAME = 1;
     public static final String LOCATION_CHINESE_NAME = "1";
@@ -17,15 +18,19 @@ public class MoleculeMemory {
     public static final Molecule LOCATION_OBJECT_DATA = new Molecule();
     public static final Integer LOCATION_DATA_VERSION = 4;
     public static final String LOCATION_DESCRIPTION = "5";
-    public Statement statement;
-    public PreparedStatement writer;
     public static final byte DO_REWRITE = 0;
     public static final byte DO_NOT_REWRITE = 1;
+    //<--------------------------batch------------------------------->
+    private static final boolean DO_BATCH = true;
+    public PreparedStatement writer;
     public PreparedStatement updater;
     public PreparedStatement readerFromChineseName;
     public PreparedStatement readerFromEnglishName;
     public PreparedStatement checker1;
     public PreparedStatement checker2;
+    private static final boolean DO_NOT_BATCH = false;
+    //<--------------------------statement--------------------------->
+    public Statement statement;
 
 
     public MoleculeMemory(Connection connection) throws SQLException {
@@ -59,10 +64,6 @@ public class MoleculeMemory {
 
     }
 
-    public boolean writeMolecule(Molecule m, String ChineseName, String EnglishName, String Description) throws IOException, SQLException {
-        return this.writeMolecule(m, ChineseName, EnglishName, Description, DO_REWRITE);
-    }
-
     private String checkDescription(String Description) {
         if (Description == null) {
             Description = "无";
@@ -76,7 +77,8 @@ public class MoleculeMemory {
     }
 
     // TODO: 2020/6/6 错误:检查相同元素
-    public boolean writeMolecule(Molecule m, String ChineseName, String EnglishName, String Description, byte rewrite) throws SQLException, IOException {
+
+    private boolean writeMolecule0(Molecule m, String ChineseName, String EnglishName, String Description, byte rewrite, boolean batch) throws SQLException, IOException {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream;
@@ -84,8 +86,11 @@ public class MoleculeMemory {
         long time = System.nanoTime();
         if (checkAvailable(ChineseName, EnglishName)) {
             if (rewrite == DO_REWRITE) {
-                updateMolecule(ChineseName, EnglishName, m, Description);
-
+                if (batch) {
+                    batchUpdateMolecule(ChineseName, EnglishName, m, Description);
+                } else {
+                    updateMolecule(ChineseName, EnglishName, m, Description);
+                }
                 return true;
             } else {
 
@@ -102,14 +107,35 @@ public class MoleculeMemory {
         writer.setLong(4, Molecule.getVersion());
         Description = checkDescription(Description);
         writer.setString(5, Description);
-        writer.executeUpdate();
+        if (batch) {
+            writer.addBatch();
+        } else {
+            writer.executeUpdate();
+        }
 
         return true;
 
     }
 
-    public boolean updateMolecule(String ChineseName, String EnglishName, Molecule molecule, String Description) throws SQLException, IOException {
-        if (checkAvailable(ChineseName, EnglishName)) {
+    public boolean writeMolecule(Molecule m, String ChineseName, String EnglishName, String Description, byte rewrite) throws SQLException, IOException {
+        return writeMolecule0(m, ChineseName, EnglishName, Description, rewrite, DO_NOT_BATCH);
+    }
+
+
+    public boolean batchWriteMolecule(Molecule m, String ChineseName, String EnglishName, String Description, byte rewrite) throws SQLException, IOException {
+        return writeMolecule0(m, ChineseName, EnglishName, Description, rewrite, DO_BATCH);
+    }
+
+    public boolean writeMolecule(Molecule m, String ChineseName, String EnglishName, String Description) throws IOException, SQLException {
+        return this.writeMolecule(m, ChineseName, EnglishName, Description, DO_REWRITE);
+    }
+
+    public boolean batchWriteMolecule(Molecule m, String ChineseName, String EnglishName, String Description) throws IOException, SQLException {
+        return this.batchWriteMolecule(m, ChineseName, EnglishName, Description, DO_REWRITE);
+    }
+
+    private boolean updateMolecule0(String ChineseName, String EnglishName, Molecule molecule, String Description, boolean batch) throws SQLException, IOException {
+        if (!checkAvailable(ChineseName, EnglishName)) {
             return false;
         } else {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -122,10 +148,23 @@ public class MoleculeMemory {
             Description = checkDescription(Description);
             updater.setString(3, Description);
             updater.setString(4, EnglishName);
-            updater.executeUpdate();
+            if (batch) {
+                updater.addBatch();
+            } else {
+                updater.executeUpdate();
+            }
         }
         return true;
     }
+
+    public boolean updateMolecule(String ChineseName, String EnglishName, Molecule molecule, String Description) throws SQLException, IOException {
+        return updateMolecule0(ChineseName, EnglishName, molecule, Description, DO_NOT_BATCH);
+    }
+
+    public boolean batchUpdateMolecule(String ChineseName, String EnglishName, Molecule molecule, String Description) throws SQLException, IOException {
+        return updateMolecule0(ChineseName, EnglishName, molecule, Description, DO_BATCH);
+    }
+
 
     public ResultSet readByName(String Name, byte condition) throws SQLException, IOException, ClassNotFoundException {
 
@@ -164,39 +203,6 @@ public class MoleculeMemory {
             throw new UnsupportedOperationException("不支持该操作");
         }
 
-    }
-
-    public String readChineseNameByEnglishName(String EnglishName) throws SQLException, IOException, ClassNotFoundException {
-        ResultSet resultSet = readByName(EnglishName, CHINESE_NAME);
-        resultSet.next();
-        return resultSet.getString(1);
-    }
-
-    public String readEnglishNameByChineseName(String ChineseName) throws SQLException, IOException, ClassNotFoundException {
-        ResultSet resultSet = readByName(ChineseName, CHINESE_NAME);
-        resultSet.next();
-        return resultSet.getString(2);
-    }
-
-    public Molecule readMoleculeObjectByName(String name, byte condition) throws SQLException, IOException, ClassNotFoundException {
-
-        ResultSet resultSet = readByName(name, condition);
-        resultSet.next();
-        InputStream stream = resultSet.getBinaryStream(3);
-        ObjectInputStream objectInputStream = new ObjectInputStream(stream);
-        return (Molecule) objectInputStream.readObject();
-    }
-
-    public String readDataVersion(String name, byte condition) throws SQLException, IOException, ClassNotFoundException {
-        ResultSet resultSet = readByName(name, condition);
-        resultSet.next();
-        return resultSet.getString(4);
-    }
-
-    public String readDescription(String name, byte condition) throws SQLException, IOException, ClassNotFoundException {
-        ResultSet resultSet = readByName(name, condition);
-        resultSet.next();
-        return resultSet.getString(5);
     }
 
 

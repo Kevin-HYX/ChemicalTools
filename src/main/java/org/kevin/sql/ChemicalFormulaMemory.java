@@ -101,7 +101,7 @@ public class ChemicalFormulaMemory {
                 writer.setString(4, Description);
                 writer.setBlob(5, new ByteArrayInputStream(data));
                 writer.setLong(6, chemicalFormula.hashCode());
-                writer.execute();
+                writer.executeUpdate();
                 return true;
             } catch (SQLException | IOException throwables) {
                 throwables.printStackTrace();

@@ -9,6 +9,7 @@ import java.sql.SQLException;
  * @version 1.0
  */
 public class ConnectionManager {
+    public static final String DEFAULT_HOST = "jdbc:mysql://192.168.1.103:3306/chemicaltool?rewriteBatchedStatements = true&serverTimezone = UTC ";
     /**
      * 一个<code>Connection</code>,充当缓冲池
      */
@@ -25,7 +26,7 @@ public class ConnectionManager {
      * @see Connection
      */
     public static Connection getNewConnection(String userName, String passwd) {
-        return getNewConnection("jdbc:mysql://192.168.1.103:3306/chemicaltool ? serverTimezone = UTC", userName, passwd);
+        return getNewConnection(DEFAULT_HOST, userName, passwd);
     }
 
     /**
@@ -82,7 +83,7 @@ public class ConnectionManager {
      * @see Connection
      */
     public static Connection getConnection(String userName, String passwd) {
-        return getConnection("jdbc:mysql://192.168.1.103:3306/chemicaltool ? serverTimezone = UTC & rewriteBatchedStatements = true", userName, passwd);
+        return getConnection(DEFAULT_HOST, userName, passwd);
     }
 
     /**
